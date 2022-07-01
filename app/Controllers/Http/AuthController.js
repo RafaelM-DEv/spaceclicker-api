@@ -11,12 +11,19 @@ class AuthController {
     return user
   }
 
-  async authenticate ({ request, auth }) {
+  async authenticate ({ request, response, auth }) {
     const { email, password } = request.all()
 
-    const token = await auth.attempt(email, password)
+    try {
+      const token = await auth.attempt(email, password)
 
-    return token
+      return token
+    } catch (error) {
+      response.status(401)
+      response.json({
+        message: 'E-mail ou Senha incorretos!'
+      })
+    }
   }
 
   async connect({response}) {
