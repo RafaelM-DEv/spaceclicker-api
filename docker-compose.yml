@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    volumes:
+    - .:/home/node/app
+    - /home/node/app/node_modules
+    ports:
+    - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: space_db_clicker
+    restart: always
+    ports:
+      - 3306:3306
+    expose:
+      - '3306'
+    networks:
+      - app-network
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: space
+      MYSQL_PASSWORD: space
+      MYSQL_DATABASE: space_db
+    
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+
